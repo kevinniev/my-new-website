@@ -1,12 +1,12 @@
 import React from 'react';
 
-const App = () => {
+function App() {
     return (
-        <div>
-            <h1>Welcome to My New Website!</h1>
-            <p>This is the main App component.</p>
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+            <h1>Welcome to My New Website</h1>
+            <p>Frontend is running successfully!</p>
         </div>
     );
-};
+}
 
 export default App;
