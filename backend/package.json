@@ -1,0 +1,12 @@
+{
+  "name": "my-new-website",
+  "version": "1.0.0",
+  "description": "Backend for my new website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
