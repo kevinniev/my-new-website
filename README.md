@@ -1,15 +1,12 @@
-# Project Setup and Deployment Instructions
+# My New Website
 
-## Introduction
-This document provides a comprehensive guide for setting up and deploying the **my-new-website** project.
+## Project Structure
+- **/src**: Contains source files, including components and styles.
+- **/public**: Static files served directly by the server.
+- **/tests**: Automated tests for various components.
+- **README.md**: Project documentation and guidelines.
 
-## Prerequisites
-Before you begin, ensure you have met the following requirements:
-- Node.js (version X.X.X)
-- npm (Node Package Manager)
-- A code editor (e.g., Visual Studio Code)
-
-## Installation
+## Quick Start Guide
 1. Clone the repository:
    ```bash
    git clone https://github.com/kevinniev/my-new-website.git
@@ -19,37 +16,19 @@ Before you begin, ensure you have met the following requirements:
    ```bash
    npm install
    ```
-
-## Running the Project
-- To run the project locally, use the following command:
+3. Run the development server:
    ```bash
    npm start
    ```
-- Open your browser and go to `http://localhost:3000`.
+4. Visit `http://localhost:3000` to view your application.
 
 ## Deployment Instructions
-You can deploy the project using the following methods:
-
-### Using GitHub Pages
-1. Build the project:
+1. Build the application for production:
    ```bash
    npm run build
    ```
-2. Push the `build` directory to the `gh-pages` branch.
+2. Deploy to your hosting provider (e.g., Vercel, Netlify, etc.). Follow their respective deployment instructions to upload the contents of the `build` folder.
 
-### Using Heroku
-1. Ensure you have the Heroku CLI installed.
-2. Create a new Heroku application:
-   ```bash
-   heroku create my-new-website
-   ```
-3. Deploy the project:
-   ```bash
-   git push heroku main
-   ```
+---
 
-## Contribution
-To contribute to this project, please fork the repository and submit a pull request for any significant changes.
-
-## License
-This project is licensed under the MIT License.
+For more detailed information on how to set up and contribute to the project, please refer to the full documentation.
