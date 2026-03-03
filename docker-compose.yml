@@ -1,19 +1,26 @@
 version: '3.8'
+
 services:
-  web:
-    image: nginx:latest
+  frontend:
+    image: my-frontend-image
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "3000:3000"
     volumes:
-      - ./html:/usr/share/nginx/html
-  db:
-    image: mysql:5.7
+      - ./frontend:/app
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: example_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      - NODE_ENV=development
+
+  backend:
+    image: my-backend-image
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
     volumes:
-      - db_data:/var/lib/mysql
-volumes:
-  db_data:
+      - ./backend:/app
+    environment:
+      - NODE_ENV=development
