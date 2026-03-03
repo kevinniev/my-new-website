@@ -1,1 +1,1 @@
-{\n  "buildCommand": "npm --prefix frontend install && npm --prefix frontend run build",\n  "outputDirectory": "frontend/build"\n}
+{"buildCommand":"npm install --prefix frontend && npm run build --prefix frontend","outputDirectory":"frontend/build"}
