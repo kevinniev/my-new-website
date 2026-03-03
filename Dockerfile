@@ -1,15 +1,26 @@
-# Multi-stage Dockerfile
-
-# Stage 1: Build
-FROM node:14 AS build
-WORKDIR /app
-COPY package*.json ./
+# Frontend build stage
+FROM node:14 AS frontend-build
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
 RUN npm install
-COPY . .
+COPY frontend/ ./
 RUN npm run build
 
-# Stage 2: Serve
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Backend build stage
+FROM node:14 AS backend-build
+WORKDIR /app/backend
+COPY backend/package*.json ./
+RUN npm install
+COPY backend/ ./
+
+# Final stage
+FROM node:14
+WORKDIR /app
+# Copy frontend build artifacts
+COPY --from=frontend-build /app/frontend/dist ./frontend
+# Copy backend build artifacts
+COPY --from=backend-build /app/backend ./backend
+
+# Expose the port the app runs on
+EXPOSE 3000
+CMD ["node", "backend/server.js"]
