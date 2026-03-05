@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: my-frontend-image
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - NODE_ENV=development
+
+  backend:
+    image: my-backend-image
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - NODE_ENV=development
