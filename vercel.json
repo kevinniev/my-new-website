@@ -9,7 +9,13 @@
     { "path": "/api/cron/partner-job-pull", "schedule": "0 9 * * *" },
     { "path": "/api/cron/posting-queue", "schedule": "0 10 * * *" },
     { "path": "/api/cron/daily-crm-update", "schedule": "0 11 * * *" },
-    { "path": "/api/cron/daily-report", "schedule": "0 12 * * *" }
+    { "path": "/api/cron/daily-report", "schedule": "0 12 * * *" },
+    { "path": "/api/cron/onboarding-status-sync", "schedule": "*/15 * * * *" },
+    { "path": "/api/cron/onboarding-checker", "schedule": "*/30 * * * *" },
+    { "path": "/api/cron/missing-step-detector", "schedule": "0 * * * *" },
+    { "path": "/api/cron/background-check-poller", "schedule": "0 */2 * * *" },
+    { "path": "/api/cron/document-quality-validator", "schedule": "0 6 * * *" },
+    { "path": "/api/cron/onboarding-reminder-job", "schedule": "0 9 * * *" }
   ],
   "functions": {
     "api/**/*.js": { "maxDuration": 300 }
