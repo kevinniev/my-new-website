@@ -1,1 +1,35 @@
-
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
+  "crons": [
+    { "path": "/api/cron/social-feed-refresh", "schedule": "*/5 * * * *" },
+    { "path": "/api/cron/engagement-detector", "schedule": "0 * * * *" },
+    { "path": "/api/cron/engagement-engine", "schedule": "0 7 * * *" },
+    { "path": "/api/cron/analytics-sync", "schedule": "0 8 * * *" },
+    { "path": "/api/cron/partner-job-pull", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/posting-queue", "schedule": "0 10 * * *" },
+    { "path": "/api/cron/daily-crm-update", "schedule": "0 11 * * *" },
+    { "path": "/api/cron/daily-report", "schedule": "0 12 * * *" }
+  ],
+  "functions": {
+    "api/**/*.js": { "maxDuration": 300 }
+  },
+  "env": {
+    "AVFREELANCE_API_URL": "@avfreelance_api_url",
+    "AVFREELANCE_API_KEY": "@avfreelance_api_key",
+    "FACEBOOK_PAGE_ACCESS_TOKEN": "@facebook_page_access_token",
+    "FACEBOOK_PAGE_ID": "@facebook_page_id",
+    "INSTAGRAM_ACCESS_TOKEN": "@instagram_access_token",
+    "INSTAGRAM_ACCOUNT_ID": "@instagram_account_id",
+    "TWITTER_BEARER_TOKEN": "@twitter_bearer_token",
+    "TWITTER_API_KEY": "@twitter_api_key",
+    "TWITTER_API_SECRET": "@twitter_api_secret",
+    "TWITTER_ACCESS_TOKEN": "@twitter_access_token",
+    "TWITTER_ACCESS_SECRET": "@twitter_access_secret",
+    "LINKEDIN_ACCESS_TOKEN": "@linkedin_access_token",
+    "THREADS_ACCESS_TOKEN": "@threads_access_token",
+    "THREADS_USER_ID": "@threads_user_id",
+    "RAPIDAPI_KEY": "@rapidapi_key",
+    "CRON_SECRET": "@cron_secret"
+  }
+}

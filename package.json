@@ -1,0 +1,22 @@
+{
+  "name": "avfreelance-automation",
+  "version": "1.0.0",
+  "description": "AVfreelance external automation engine — Vercel serverless functions + cron jobs",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "lint": "eslint . --ext .js,.ts",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.0.0",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=20.x"
+  }
+}
