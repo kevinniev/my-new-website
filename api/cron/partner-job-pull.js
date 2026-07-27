@@ -9,9 +9,29 @@
  */
 
 import { requireCron } from "../../lib/auth.js";
-import { pullPartnerJobs, getAutomationMode } from "../../lib/avfreelance.js";
-import { autopost } from "../../functions/autopost.js";
-import logger from "../../lib/logger.js";
+import { callAVfreelance, getAutomationMode } from "../../lib/avfreelance.js";
+import { createLogger } from "../../lib/logger.js";
+
+const logger = createLogger("partner-job-pull");
+
+const BASE_URL = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : process.env.AVFREELANCE_BASE_URL || "http://localhost:3000";
+
+async function callFunction(path, body = null) {
+  const secret = process.env.CRON_SECRET;
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: body ? "POST" : "GET",
+    headers: {
+      "Content-Type": "application/json",
+      ...(secret ? { Authorization: `Bearer ${secret}` } : {}),
+    },
+    body: body ? JSON.stringify(body) : undefined,
+    signal: AbortSignal.timeout(120000),
+  });
+  if (!res.ok) throw new Error(`${path} returned ${res.status}`);
+  return res.json();
+}
 
 export default async function handler(req, res) {
   if (!requireCron(req, res)) return;

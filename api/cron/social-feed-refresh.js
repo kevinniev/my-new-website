@@ -10,8 +10,13 @@
  */
 
 import { requireCron } from "../../lib/auth.js";
-import { triggerSocialScan, getAutomationMode } from "../../lib/avfreelance.js";
-import logger from "../../lib/logger.js";
+import { createLogger } from "../../lib/logger.js";
+
+const logger = createLogger("social-feed-refresh-cron");
+
+const BASE_URL = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : process.env.AVFREELANCE_BASE_URL || "http://localhost:3000";
 
 export default async function handler(req, res) {
   if (!requireCron(req, res)) return;
