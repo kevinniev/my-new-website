@@ -1,0 +1,23 @@
+name: Technician Onboarding Reminders
+
+on:
+  schedule:
+    - cron: "0 15 */2 * *"  # Every 48 hours at 3 PM UTC (8 AM MST)
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger technician-onboarding-reminders endpoint
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
+            "https://avfreelance.com/api/scheduled/technician-onboarding-reminders" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json")
+          HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+          BODY=$(echo "$RESPONSE" | head -1)
+          echo "Response: $BODY"
+          echo "HTTP Status: $HTTP_CODE"
+          if [ "$HTTP_CODE" != "200" ]; then echo "ERROR: $HTTP_CODE"; exit 1; fi
+          echo "technician-onboarding-reminders completed successfully"
