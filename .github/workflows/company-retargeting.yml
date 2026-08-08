@@ -1,0 +1,20 @@
+name: Company Retargeting
+
+on:
+  schedule:
+    # Daily at 10:00 UTC (3:00 AM MST) — staggered after onboarding reminder (09:00 UTC)
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+jobs:
+  retarget:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger company retargeting job
+        run: |
+          curl -X POST https://avfreelance.com/api/scheduled/company-retargeting \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --fail \
+            --silent \
+            --show-error
