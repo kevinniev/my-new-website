@@ -1,0 +1,27 @@
+{
+  "dates": {
+    "count": 131,
+    "first": "2026-08-23",
+    "last": "2026-12-31",
+    "unique": 131
+  },
+  "images": {
+    "count": 131,
+    "unique_urls": 131,
+    "http_200_images": 131,
+    "failures": []
+  },
+  "captions": {
+    "platforms_per_entry": [
+      "instagram",
+      "facebook",
+      "threads",
+      "linkedin"
+    ]
+  },
+  "kv": {
+    "loaded_entries": 131,
+    "first_key": "empowering_post_2026-08-23",
+    "last_key": "empowering_post_2026-12-31"
+  }
+}
