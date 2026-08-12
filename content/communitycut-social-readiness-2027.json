@@ -1,0 +1,27 @@
+{
+  "dates": {
+    "count": 365,
+    "first": "2027-01-01",
+    "last": "2027-12-31",
+    "unique": 365
+  },
+  "images": {
+    "count": 365,
+    "unique_urls": 365,
+    "http_200_images": 365,
+    "failures": []
+  },
+  "captions": {
+    "platforms_per_entry": [
+      "instagram",
+      "facebook",
+      "threads",
+      "linkedin"
+    ]
+  },
+  "kv": {
+    "loaded_entries": 365,
+    "first_key": "empowering_post_2027-01-01",
+    "last_key": "empowering_post_2027-12-31"
+  }
+}
