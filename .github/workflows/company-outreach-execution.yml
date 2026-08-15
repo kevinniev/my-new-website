@@ -17,6 +17,7 @@ on:
           - EXECUTE_INITIAL
           - EXECUTE_FOLLOW_UP_1
           - EXECUTE_FOLLOW_UP_2
+          - DIAGNOSE_OIDC
   schedule:
     - cron: "0 * * * *"
 
@@ -54,7 +55,7 @@ jobs:
             echo "The execution endpoint performs a fresh suppression, delivery-state, and MX check before every attempted delivery."
           } >> "$GITHUB_STEP_SUMMARY"
       - name: Execute only the explicitly selected approved outreach step
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.execution_mode != 'HOLD' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.execution_mode != 'HOLD' && inputs.execution_mode != 'DIAGNOSE_OIDC' }}
         run: |
           set -o pipefail
           case "${{ inputs.execution_mode }}" in
@@ -73,6 +74,19 @@ jobs:
             --data "{\"step\":\"$STEP\"}" | tee outreach-result.json
           echo "## Outreach execution result" >> "$GITHUB_STEP_SUMMARY"
           cat outreach-result.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Inspect GitHub OIDC claims without delivery
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.execution_mode == 'DIAGNOSE_OIDC' }}
+        run: |
+          OIDC_TOKEN=$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=avfreelance-company-outreach" \
+            | node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync(0, 'utf8')).value)")
+          export OIDC_TOKEN
+          node --input-type=module <<'NODE'
+          const payload = JSON.parse(Buffer.from(process.env.OIDC_TOKEN.split('.')[1], 'base64url').toString('utf8'));
+          const fields = ['iss', 'aud', 'sub', 'repository', 'ref', 'event_name', 'workflow', 'workflow_ref'];
+          console.log(JSON.stringify(Object.fromEntries(fields.map((field) => [field, payload[field] ?? null])), null, 2));
+          NODE
       - name: Check due follow-ups without sending non-due messages
         if: ${{ github.event_name == 'schedule' }}
         run: |
