@@ -22,6 +22,10 @@ on:
 
 permissions:
   contents: read
+  id-token: write
+
+permissions:
+  contents: read
 
 jobs:
   validate-held-batch:
@@ -63,8 +67,12 @@ jobs:
             EXECUTE_FOLLOW_UP_2) STEP=follow_up_2 ;;
             *) echo "Unsupported execution mode"; exit 1 ;;
           esac
+          OIDC_TOKEN=$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=avfreelance-company-outreach" \
+            | node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync(0, 'utf8')).value)")
           curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
             -H "Content-Type: application/json" \
             --data "{\"step\":\"$STEP\"}" | tee outreach-result.json
           echo "## Outreach execution result" >> "$GITHUB_STEP_SUMMARY"
@@ -73,9 +81,13 @@ jobs:
         if: ${{ github.event_name == 'schedule' }}
         run: |
           set -o pipefail
+          OIDC_TOKEN=$(curl --fail-with-body --silent --show-error \
+            -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=avfreelance-company-outreach" \
+            | node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync(0, 'utf8')).value)")
           for STEP in follow_up_1 follow_up_2; do
             curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
-              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              -H "Authorization: Bearer $OIDC_TOKEN" \
               -H "Content-Type: application/json" \
               --data "{\"step\":\"$STEP\"}" >> "$GITHUB_STEP_SUMMARY"
           done
