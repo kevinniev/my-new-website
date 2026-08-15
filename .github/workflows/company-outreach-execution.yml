@@ -56,6 +56,7 @@ jobs:
       - name: Execute only the explicitly selected approved outreach step
         if: ${{ github.event_name == 'workflow_dispatch' && inputs.execution_mode != 'HOLD' }}
         run: |
+          set -o pipefail
           case "${{ inputs.execution_mode }}" in
             EXECUTE_INITIAL) STEP=initial ;;
             EXECUTE_FOLLOW_UP_1) STEP=follow_up_1 ;;
@@ -71,6 +72,7 @@ jobs:
       - name: Check due follow-ups without sending non-due messages
         if: ${{ github.event_name == 'schedule' }}
         run: |
+          set -o pipefail
           for STEP in follow_up_1 follow_up_2; do
             curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
               -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
