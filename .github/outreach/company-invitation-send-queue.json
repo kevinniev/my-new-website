@@ -1,0 +1,23 @@
+{
+  "queue_name": "verified-company-invitations-2026-08-15",
+  "status": "awaiting_explicit_owner_approval",
+  "execution": "disabled",
+  "approval_requirement": "The owner must explicitly approve the named recipients before any delivery workflow can be enabled.",
+  "pre_send_checks": [
+    "Recheck bounce_suppression immediately before each send.",
+    "Recheck MX availability immediately before each send.",
+    "Stop when a recipient has a prior successful invitation, an unsubscribe, a bounce, or a temporary delivery deferral.",
+    "Use admin@avfreelance.com as the sender and the approved template only.",
+    "Do not create more than two follow-up reminders per recipient in a seven-day period."
+  ],
+  "entries": [
+    {"id":"ambient-event-group","company":"Ambient Event Group","email":"info@ambienteventgroup.com","website":"https://www.ambienteventgroup.com/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"av-labor-source","company":"AV Labor Source","email":"info@avlaborsourceinc.com","website":"https://avlaborsourceinc.com/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"bright-av","company":"Bright AV","email":"info@brightav.com","website":"https://brightav.com/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"creative-technology-uk","company":"Creative Technology UK","email":"hello@ctlondon.com","website":"https://ct-group.com/uk/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"icad-company-riyadh","company":"ICAD Company Riyadh","email":"info@icad.com","website":"https://www.icad.com/contact/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"live-events","company":"Live Events","email":"hello@liveevents.com","website":"https://liveevents.com/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"on-services","company":"ON Services","email":"services@onservices.com","website":"https://www.onservices.com/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"},
+    {"id":"technical-elements","company":"Technical Elements","email":"info@teatlanta.com","website":"https://www.teatlanta.com/","template":"company_invitation_initial_v1","mx_status":"present","suppression_status":"no_match","bounce_risk":"low","initial_send":"awaiting_approval","follow_up_1":"3_days_after_confirmed_initial_send","follow_up_2":"7_days_after_confirmed_initial_send"}
+  ]
+}
