@@ -1,0 +1,26 @@
+{
+  "schedule_name": "verified-company-invitations-approval-plan",
+  "status": "awaiting_explicit_owner_approval",
+  "delivery_enabled": false,
+  "approval_anchor": "T0 is the timestamp at which the owner explicitly approves the named recipients. No calendar date is assigned before that approval.",
+  "workflow": "company-outreach-approval-gate.yml",
+  "workflow_behavior": "validates and records the held plan only; it does not send email, submit forms, or schedule delivery jobs",
+  "execution_contract": ".github/outreach/company-invitation-execution-contract.json",
+  "template_generation": {
+    "source": "version-controlled template files",
+    "vercel_connection": "inactive; not enabled or used",
+    "reason": "Template generation requires no deployment or external account access while the outreach package is held."
+  },
+  "entries": [
+    {"company":"Ambient Event Group","email":"info@ambienteventgroup.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"AV Labor Source","email":"info@avlaborsourceinc.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"Bright AV","email":"info@brightav.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"Creative Technology UK","email":"hello@ctlondon.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"ICAD Company Riyadh","email":"info@icad.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"Live Events","email":"hello@liveevents.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"ON Services","email":"services@onservices.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"},
+    {"company":"Technical Elements","email":"info@teatlanta.com","initial":{"time":"T0","template":"company_invitation_initial_v1"},"follow_up_1":{"time":"T0 + 3 calendar days","template":"company_invitation_follow_up_1_v1"},"follow_up_2":{"time":"T0 + 7 calendar days","template":"company_invitation_follow_up_2_v1"},"mx_status":"present","suppression_status":"no_match","risk":"low"}
+  ],
+  "form_only_plan": ".github/outreach/company-invitation-form-confirmation-queue.json",
+  "excluded": ["Swank Audio-Visual"]
+}
