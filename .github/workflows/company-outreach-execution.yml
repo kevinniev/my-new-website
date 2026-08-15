@@ -1,0 +1,79 @@
+name: Company Outreach Execution
+
+on:
+  workflow_dispatch:
+    inputs:
+      approval_reference:
+        description: "Owner approval reference (record only; this workflow never sends email)"
+        required: true
+        type: string
+      execution_mode:
+        description: "Safety mode for this workflow"
+        required: true
+        default: "HOLD"
+        type: choice
+        options:
+          - HOLD
+          - EXECUTE_INITIAL
+          - EXECUTE_FOLLOW_UP_1
+          - EXECUTE_FOLLOW_UP_2
+  schedule:
+    - cron: "0 * * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-held-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate the held approval-only queues
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const emailQueue = JSON.parse(fs.readFileSync('.github/outreach/company-invitation-send-queue.json', 'utf8'));
+          const formQueue = JSON.parse(fs.readFileSync('.github/outreach/company-invitation-form-confirmation-queue.json', 'utf8'));
+          const schedulePlan = JSON.parse(fs.readFileSync('.github/outreach/company-invitation-schedule-plan.json', 'utf8'));
+          const executionContract = JSON.parse(fs.readFileSync('.github/outreach/company-invitation-execution-contract.json', 'utf8'));
+          if (emailQueue.status !== 'awaiting_explicit_owner_approval' || emailQueue.execution !== 'disabled') throw new Error('Email queue must remain held and disabled.');
+          if (emailQueue.entries.length !== 8) throw new Error('Expected exactly eight direct-email candidates.');
+          if (!emailQueue.entries.every((entry) => entry.mx_status === 'present' && entry.suppression_status === 'no_match' && entry.bounce_risk === 'low')) throw new Error('A direct-email candidate does not meet the held batch safeguards.');
+          if (formQueue.status !== 'manual_confirmation_required' || formQueue.execution !== 'disabled') throw new Error('Form queue must remain held and disabled.');
+          if (formQueue.entries.length !== 9 || formQueue.excluded.some((entry) => entry.company !== 'Swank Audio-Visual')) throw new Error('Form queue or Swank exclusion is invalid.');
+          if (schedulePlan.status !== 'awaiting_explicit_owner_approval' || schedulePlan.delivery_enabled !== false || schedulePlan.entries.length !== 8) throw new Error('Schedule plan must remain held and delivery-disabled.');
+          if (executionContract.state !== 'locked_pending_explicit_owner_approval' || executionContract.delivery_enabled !== false || !executionContract.excluded_candidates.includes('Swank Audio-Visual')) throw new Error('Execution contract must remain locked and preserve exclusions.');
+          NODE
+      - name: Record approval gate status
+        run: |
+          {
+            echo "## Company Outreach Approval Gate"
+            echo "Approval reference: ${{ inputs.approval_reference }}"
+            echo "Eight email candidates and nine form-only candidates were validated."
+            echo "Safety mode: ${{ inputs.execution_mode }}"
+            echo "The execution endpoint performs a fresh suppression, delivery-state, and MX check before every attempted delivery."
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Execute only the explicitly selected approved outreach step
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.execution_mode != 'HOLD' }}
+        run: |
+          case "${{ inputs.execution_mode }}" in
+            EXECUTE_INITIAL) STEP=initial ;;
+            EXECUTE_FOLLOW_UP_1) STEP=follow_up_1 ;;
+            EXECUTE_FOLLOW_UP_2) STEP=follow_up_2 ;;
+            *) echo "Unsupported execution mode"; exit 1 ;;
+          esac
+          curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            --data "{\"step\":\"$STEP\"}" | tee outreach-result.json
+          echo "## Outreach execution result" >> "$GITHUB_STEP_SUMMARY"
+          cat outreach-result.json >> "$GITHUB_STEP_SUMMARY"
+      - name: Check due follow-ups without sending non-due messages
+        if: ${{ github.event_name == 'schedule' }}
+        run: |
+          for STEP in follow_up_1 follow_up_2; do
+            curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
+              -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+              -H "Content-Type: application/json" \
+              --data "{\"step\":\"$STEP\"}" >> "$GITHUB_STEP_SUMMARY"
+          done
