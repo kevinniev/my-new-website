@@ -87,6 +87,11 @@ jobs:
           const fields = ['iss', 'aud', 'sub', 'repository', 'ref', 'event_name', 'workflow', 'workflow_ref'];
           console.log(JSON.stringify(Object.fromEntries(fields.map((field) => [field, payload[field] ?? null])), null, 2));
           NODE
+          curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-auth-diagnostic" \
+            -H "Authorization: Bearer $OIDC_TOKEN" \
+            -H "X-GitHub-OIDC: $OIDC_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data '{"diagnostic":true}'
       - name: Check due follow-ups without sending non-due messages
         if: ${{ github.event_name == 'schedule' }}
         run: |
