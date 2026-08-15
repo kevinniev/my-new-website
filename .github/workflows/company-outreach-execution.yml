@@ -68,7 +68,7 @@ jobs:
             -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=avfreelance-company-outreach" \
             | node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync(0, 'utf8')).value)")
-          curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
+          curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/integrations/company-outreach-execution" \
             -H "X-GitHub-OIDC: $OIDC_TOKEN" \
             -H "Content-Type: application/json" \
             --data "{\"step\":\"$STEP\"}" | tee outreach-result.json
@@ -87,7 +87,7 @@ jobs:
           const fields = ['iss', 'aud', 'sub', 'repository', 'ref', 'event_name', 'workflow', 'workflow_ref'];
           console.log(JSON.stringify(Object.fromEntries(fields.map((field) => [field, payload[field] ?? null])), null, 2));
           NODE
-          curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-auth-diagnostic" \
+          curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/integrations/company-outreach-auth-diagnostic" \
             -H "Authorization: Bearer $OIDC_TOKEN" \
             -H "X-GitHub-OIDC: $OIDC_TOKEN" \
             -H "Content-Type: application/json" \
@@ -101,7 +101,7 @@ jobs:
             "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=avfreelance-company-outreach" \
             | node --input-type=module -e "import fs from 'node:fs'; console.log(JSON.parse(fs.readFileSync(0, 'utf8')).value)")
           for STEP in follow_up_1 follow_up_2; do
-            curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/scheduled/company-outreach-execution" \
+            curl --fail-with-body --silent --show-error -X POST "https://avfreelance.com/api/integrations/company-outreach-execution" \
               -H "X-GitHub-OIDC: $OIDC_TOKEN" \
               -H "Content-Type: application/json" \
               --data "{\"step\":\"$STEP\"}" >> "$GITHUB_STEP_SUMMARY"
