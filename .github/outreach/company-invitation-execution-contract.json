@@ -1,0 +1,29 @@
+{
+  "contract_name": "company-invitation-release-contract",
+  "state": "locked_pending_explicit_owner_approval",
+  "delivery_enabled": false,
+  "release_rule": "No delivery code, queue mutation, contact-form submission, or follow-up job may run until the owner explicitly approves the named recipients and provides the T0 release timestamp in a future task.",
+  "execution_order": [
+    "Record the explicit owner approval and T0 release timestamp.",
+    "Recheck each approved recipient against bounce suppression, historic delivery state, and a live MX lookup immediately before delivery.",
+    "Deliver the initial template only when all three checks pass and sendUserEmail confirms success.",
+    "Record the actual delivery outcome before calculating follow-up timing.",
+    "Schedule follow-up one for three calendar days after a confirmed initial delivery, provided there is no unsubscribe, bounce, reply-based stop, or suppression event.",
+    "Schedule follow-up two for seven calendar days after a confirmed initial delivery, subject to the same checks and the two-reminder weekly limit.",
+    "Log every skip, failure, successful delivery, and stop condition."
+  ],
+  "schedule_binding": {
+    "initial": "T0",
+    "follow_up_1": "T0 + 3 calendar days after confirmed initial delivery",
+    "follow_up_2": "T0 + 7 calendar days after confirmed initial delivery"
+  },
+  "approved_email_candidates": ".github/outreach/company-invitation-send-queue.json",
+  "form_only_candidates": ".github/outreach/company-invitation-form-confirmation-queue.json",
+  "excluded_candidates": ["Swank Audio-Visual"],
+  "template_lock": {
+    "source": ".github/outreach/templates",
+    "version_controlled": true,
+    "vercel_connection": "inactive and not enabled",
+    "changes_require": "a separately reviewed commit before release"
+  }
+}
