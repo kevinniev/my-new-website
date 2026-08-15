@@ -1,0 +1,17 @@
+{
+  "queue_name": "company-invitation-form-confirmation-2026-08-15",
+  "status": "manual_confirmation_required",
+  "execution": "disabled",
+  "entries": [
+    {"company":"Big Finn International","website":"https://bigfinproductionservices.com/","contact_route":"https://bigfinproductionservices.com/","reason":"Confirm the technician reference maps to the current Big Fin Production Services entity before outreach."},
+    {"company":"Disney World","website":"https://www.disneymeetingsandevents.com/","contact_route":"https://www.disneymeetingsandevents.com/contact-us","reason":"Institutional event-contact form only; no general business inbox for this purpose."},
+    {"company":"Encore Phoenician","website":"https://info.encoreglobal.com/locations/az/the-phoenician-a-luxury-collection-resort-scottsdale/","contact_route":"https://create.encoreglobal.com/eContactGlobalLocator?furl=https://info.encoreglobal.com/locations/az/the-phoenician-a-luxury-collection-resort-scottsdale/","reason":"Official on-site contact form only."},
+    {"company":"High End Labor Pool","website":"https://highendlabor.com/","contact_route":"https://highendlabor.com/join-the-crew","reason":"Do not submit until a current business or partnership contact is verified; the rebranded domain has no MX service."},
+    {"company":"Music Matter Productions","website":"https://musicmattersproductions.com/","contact_route":"https://musicmattersproductions.com/contact-us/","reason":"Official collaboration form only; no verified public business inbox."},
+    {"company":"Penta Media GTV HD","website":"https://gtv.ae/","contact_route":"https://gtv.ae/","reason":"Confirm whether the reference means GTV Film Productions or a distinct Penta Media organization."},
+    {"company":"PRG","website":"https://www.prg.com/en/contact","contact_route":"https://www.prg.com/en/contact","reason":"Official contact form only; no general business inbox was found."},
+    {"company":"Stage Sound, Inc.","website":"https://stagesound.com/","contact_route":"https://stagesound.com/contact-us/","reason":"Official form only; no public business inbox was found on the official site."},
+    {"company":"University of Delaware","website":"https://www.udel.edu/students/involvement/usc/reserve-a-space/","contact_route":"https://www.udel.edu/eventservres-stuorg/","reason":"Institutional route; confirm the appropriate department and scope before any contact."}
+  ],
+  "excluded": [{"company":"Swank Audio-Visual","reason":"No active official contact route was verified and the former domain has a null MX record."}]
+}
