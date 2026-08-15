@@ -23,10 +23,6 @@ on:
 permissions:
   contents: read
   id-token: write
-
-permissions:
-  contents: read
-
 jobs:
   validate-held-batch:
     runs-on: ubuntu-latest
