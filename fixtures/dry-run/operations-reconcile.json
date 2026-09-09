@@ -1,0 +1,6 @@
+{
+  "name": "operations-reconcile",
+  "brand": "avfreelance",
+  "candidates": [{ "ref": "dependency:primary-api", "status": "fixture_only" }],
+  "exclusionReasons": ["external_notifications_disabled"]
+}

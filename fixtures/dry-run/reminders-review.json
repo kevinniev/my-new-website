@@ -1,0 +1,6 @@
+{
+  "name": "reminders-review",
+  "brand": "avfreelance",
+  "candidates": [{ "ref": "reminder_candidate:fixture-001", "status": "held_for_approval" }],
+  "exclusionReasons": ["email_delivery_disabled"]
+}

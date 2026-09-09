@@ -1,0 +1,6 @@
+{
+  "name": "lifecycle-review",
+  "brand": "avfreelance",
+  "candidates": [{ "ref": "lifecycle_exception:fixture-001", "status": "report_only" }],
+  "exclusionReasons": ["financial_actions_disabled", "hiring_actions_disabled"]
+}

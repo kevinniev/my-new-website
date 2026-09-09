@@ -1,0 +1,6 @@
+{
+  "name": "industry-jobs",
+  "brand": "avfreelance",
+  "candidates": [{ "ref": "industry_job:fixture-001", "status": "source_attributed_fixture" }],
+  "exclusionReasons": ["provider_requests_disabled", "marketplace_write_disabled"]
+}

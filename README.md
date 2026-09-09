@@ -1,6 +1,20 @@
 # AVfreelance External Automation Engine
 
-This repository powers all scheduled automation for the AVfreelance platform, running entirely on **Vercel Serverless Functions + Cron Jobs** — zero Manus credits consumed.
+> **Current state: dry-run foundation only.** Vercel Cron Jobs is disabled and `vercel.json` contains no cron declarations. The new foundation routes can only create local, fixture-based manifests; they cannot publish, send, call external providers, or mutate AVfreelance data.
+
+## Local safety checks
+
+```bash
+npm test
+npm run check:routes
+npm run dry-run:manual -- /api/cron/operations-reconcile
+```
+
+Do not push, deploy, configure environment values, enable Vercel Cron Jobs, or invoke the manual GitHub workflow without a separate authorization that names the branch, route, fixture, observer, expected result, and rollback owner.
+
+## Legacy architecture reference
+
+The following legacy reference documents prior automation intent. It is **not active** in the current dry-run-only hold state.
 
 ## Architecture
 

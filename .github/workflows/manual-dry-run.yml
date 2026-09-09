@@ -1,0 +1,26 @@
+name: Manual Dry-Run Foundation
+
+on:
+  workflow_dispatch:
+    inputs:
+      route:
+        description: "Dry-run route from the approved manifest"
+        required: true
+        default: "/api/cron/operations-reconcile"
+
+permissions:
+  contents: read
+
+jobs:
+  manifest-only:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm test
+      - run: node scripts/manual-dry-run.mjs "${{ inputs.route }}"
+
+# This file is source-only until separately pushed and manually approved.
+# It has no schedule, no deployment step, and no external credentials.

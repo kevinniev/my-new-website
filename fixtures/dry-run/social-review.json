@@ -1,0 +1,6 @@
+{
+  "name": "social-review",
+  "brand": "avfreelance",
+  "candidates": [{ "ref": "social_candidate:fixture-001", "status": "held_for_approval" }],
+  "exclusionReasons": ["publication_disabled", "no_platform_call"]
+}

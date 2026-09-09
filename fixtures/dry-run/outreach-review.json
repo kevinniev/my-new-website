@@ -1,0 +1,6 @@
+{
+  "name": "outreach-review",
+  "brand": "avfreelance",
+  "candidates": [{ "ref": "outreach_candidate:fixture-001", "status": "suppression_checked_fixture" }],
+  "exclusionReasons": ["delivery_disabled", "no_email_or_dm_call"]
+}
