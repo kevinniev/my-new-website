@@ -11,7 +11,8 @@
     "test": "node --test",
     "check:routes": "node scripts/check-route-parity.mjs",
     "check:handlers": "node scripts/check-handler-imports.mjs",
-    "dry-run:manual": "node scripts/manual-dry-run.mjs"
+    "dry-run:manual": "node scripts/manual-dry-run.mjs",
+    "check:zero-dispatch": "node scripts/check-zero-dispatch-foundation.mjs"
   },
   "dependencies": {
     "node-fetch": "^3.3.2"
