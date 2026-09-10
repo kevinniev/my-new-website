@@ -15,6 +15,7 @@
     "check:zero-dispatch": "node scripts/check-zero-dispatch-foundation.mjs"
   },
   "dependencies": {
+    "@vercel/oidc": "^3.8.7",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {

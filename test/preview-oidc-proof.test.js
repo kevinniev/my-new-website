@@ -1,0 +1,114 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { resetPreviewOidcProofForTests, runPreviewOidcProof } from "../lib/preview-oidc-proof.js";
+
+function responseRecorder() {
+  return {
+    statusCode: 200,
+    body: undefined,
+    status(code) { this.statusCode = code; return this; },
+    json(payload) { this.body = payload; return payload; },
+  };
+}
+
+function response(status, payload) {
+  return { ok: status >= 200 && status < 300, status, json: async () => payload };
+}
+
+function proofEnv(overrides = {}) {
+  return {
+    VERCEL_ENV: "preview",
+    AUTOMATION_MODE: "dry_run",
+    VERCEL_URL: "preview.example.vercel.app",
+    AVF_AUTOMATION_CLIENT_ID: "preview-client",
+    AVF_AUTOMATION_SIGNING_KEY: "preview-signing-key",
+    ...overrides,
+  };
+}
+
+const safeManifest = {
+  ok: true,
+  mode: "dry_run",
+  route: "/api/cron/operations-reconcile",
+  dispatchAllowed: false,
+  sideEffects: [],
+  candidateCount: 1,
+  limits: { providerDeadlineMs: 8000, workloadDeadlineMs: 25000, maxCandidates: 50 },
+};
+
+test.beforeEach(() => resetPreviewOidcProofForTests());
+
+test("the Preview OIDC proof forwards a short-lived identity and verifies a no-dispatch manifest", async () => {
+  const calls = [];
+  const res = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" },
+    res,
+    env: proofEnv(),
+    now: new Date("2026-09-10T22:00:00.000Z"),
+    getOidcToken: async () => "short-lived-test-oidc",
+    fetchImpl: async (url, options) => {
+      calls.push({ url, options });
+      return calls.length === 1
+        ? response(200, { ok: true, replayed: false })
+        : response(200, safeManifest);
+    },
+  });
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.body.ok, true);
+  assert.equal(res.body.proof.authentication, "vercel_oidc_and_service_pair");
+  assert.deepEqual(res.body.proof.providerCalls, []);
+  assert.equal(calls.length, 2);
+  assert.equal(calls[1].options.headers["x-vercel-trusted-oidc-idp-token"], "short-lived-test-oidc");
+  assert.equal(calls[1].options.headers["x-avf-automation-client"], "preview-client");
+  assert.equal(calls[1].options.redirect, "manual");
+});
+
+test("the proof gateway fails closed outside Preview and when the kill switch is active", async () => {
+  const production = responseRecorder();
+  await runPreviewOidcProof({ req: { method: "GET" }, res: production, env: proofEnv({ VERCEL_ENV: "production" }) });
+  assert.equal(production.statusCode, 403);
+  assert.equal(production.body.error, "preview_dry_run_only");
+
+  const killed = responseRecorder();
+  await runPreviewOidcProof({ req: { method: "GET" }, res: killed, env: proofEnv({ AUTOMATION_KILL_SWITCH: "enabled" }) });
+  assert.equal(killed.statusCode, 503);
+  assert.equal(killed.body.error, "automation_kill_switch_enabled");
+});
+
+test("the proof gateway rejects missing OIDC, replay, and unsafe manifests without dispatch", async () => {
+  const missingOidc = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: missingOidc, env: proofEnv(),
+    getOidcToken: async () => null,
+    fetchImpl: async () => response(200, { ok: true, replayed: false }),
+  });
+  assert.equal(missingOidc.statusCode, 503);
+  assert.equal(missingOidc.body.error, "vercel_oidc_token_unavailable");
+
+  resetPreviewOidcProofForTests();
+  const replay = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: replay, env: proofEnv(),
+    getOidcToken: async () => "oidc",
+    fetchImpl: async () => response(200, { ok: true, replayed: true }),
+  });
+  assert.equal(replay.statusCode, 409);
+  assert.equal(replay.body.error, "proof_already_consumed");
+
+  resetPreviewOidcProofForTests();
+  const unsafe = responseRecorder();
+  let invocation = 0;
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: unsafe, env: proofEnv(),
+    getOidcToken: async () => "oidc",
+    fetchImpl: async () => {
+      invocation += 1;
+      return invocation === 1
+        ? response(200, { ok: true, replayed: false })
+        : response(200, { ...safeManifest, dispatchAllowed: true });
+    },
+  });
+  assert.equal(unsafe.statusCode, 502);
+  assert.equal(unsafe.body.error, "fixture_handler_proof_rejected");
+});
