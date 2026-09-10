@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    { "path": "/api/cron/operations-reconcile", "schedule": "24 */4 * * *" },
+    { "path": "/api/cron/social-review", "schedule": "0 3 * * *" },
+    { "path": "/api/cron/outreach-review", "schedule": "0 4 * * *" },
+    { "path": "/api/cron/reminders-review", "schedule": "0 9 * * *" },
+    { "path": "/api/cron/lifecycle-review", "schedule": "0 0 * * *" },
+    { "path": "/api/cron/industry-jobs", "schedule": "30 */6 * * *" }
+  ]
+}

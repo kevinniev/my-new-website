@@ -1,0 +1,7 @@
+name = "avfreelance-review-gateway"
+main = "src/index.js"
+compatibility_date = "2026-09-10"
+
+# Deliberately no account_id, route, workers_dev, queue, service binding, secret,
+# or [triggers] configuration. This is source-only and cannot execute until a
+# separately approved deployment and trigger configuration are supplied.
