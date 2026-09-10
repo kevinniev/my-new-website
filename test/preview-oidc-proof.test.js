@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { resetPreviewOidcProofForTests, runPreviewOidcProof } from "../lib/preview-oidc-proof.js";
+import { createProofIdempotencyKey, resetPreviewOidcProofForTests, runPreviewOidcProof } from "../lib/preview-oidc-proof.js";
 
 function responseRecorder() {
   return {
@@ -62,6 +62,13 @@ test("the Preview OIDC proof forwards a short-lived identity and verifies a no-d
   assert.equal(calls[1].options.headers["x-vercel-trusted-oidc-idp-token"], "short-lived-test-oidc");
   assert.equal(calls[1].options.headers["x-avf-automation-client"], "preview-client");
   assert.equal(calls[1].options.redirect, "manual");
+});
+
+test("the proof idempotency scope changes for a distinct Preview deployment", () => {
+  const now = new Date("2026-09-10T22:00:00.000Z");
+  const first = createProofIdempotencyKey({ deploymentId: "preview-a", now });
+  const second = createProofIdempotencyKey({ deploymentId: "preview-b", now });
+  assert.notEqual(first, second);
 });
 
 test("the proof gateway fails closed outside Preview and when the kill switch is active", async () => {
