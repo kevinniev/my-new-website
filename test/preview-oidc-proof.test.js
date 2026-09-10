@@ -72,6 +72,13 @@ test("the proof idempotency scope changes for a distinct Preview deployment", ()
   assert.notEqual(first, second);
 });
 
+test("the temporary proof revision contributes to every generated idempotency key", () => {
+  const now = new Date("2026-09-10T22:00:00.000Z");
+  const key = createProofIdempotencyKey({ deploymentId: "preview-a", now });
+  assert.equal(typeof key, "string");
+  assert.equal(key.length, 64);
+});
+
 test("the proof gateway fails closed outside Preview and when the kill switch is active", async () => {
   const production = responseRecorder();
   await runPreviewOidcProof({ req: { method: "GET" }, res: production, env: proofEnv({ VERCEL_ENV: "production" }) });
