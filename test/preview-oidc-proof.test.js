@@ -76,6 +76,24 @@ test("the proof gateway fails closed outside Preview and when the kill switch is
   assert.equal(killed.body.error, "automation_kill_switch_enabled");
 });
 
+test("the proof gateway accepts Preview's implicit dry-run mode but rejects an explicit non-dry-run mode", async () => {
+  const implicit = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: implicit, env: proofEnv({ AUTOMATION_MODE: undefined }),
+    getOidcToken: async () => null,
+    fetchImpl: async (_url, _options) => response(200, { ok: true, replayed: false }),
+  });
+  assert.equal(implicit.statusCode, 503);
+  assert.equal(implicit.body.error, "vercel_oidc_token_unavailable");
+
+  const live = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: live, env: proofEnv({ AUTOMATION_MODE: "live" }),
+  });
+  assert.equal(live.statusCode, 403);
+  assert.equal(live.body.error, "preview_dry_run_only");
+});
+
 test("the proof gateway rejects missing OIDC, replay, and unsafe manifests without dispatch", async () => {
   const missingOidc = responseRecorder();
   await runPreviewOidcProof({
