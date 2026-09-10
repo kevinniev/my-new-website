@@ -19,6 +19,7 @@ function proofEnv(overrides = {}) {
   return {
     VERCEL_ENV: "preview",
     AUTOMATION_MODE: "dry_run",
+    VERCEL_GIT_COMMIT_SHA: "preview-test-commit",
     VERCEL_URL: "preview.example.vercel.app",
     AVF_AUTOMATION_CLIENT_ID: "preview-client",
     AVF_AUTOMATION_SIGNING_KEY: "preview-signing-key",
