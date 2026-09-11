@@ -158,3 +158,15 @@ test("the proof gateway distinguishes primary authentication rejection from an i
   assert.equal(authentication.statusCode, 502);
   assert.equal(authentication.body.error, "primary_review_auth_rejected");
 });
+
+test("the proof gateway exposes only the primary review status for non-auth rejections", async () => {
+  const rejected = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: rejected, env: proofEnv(),
+    fetchImpl: async () => response(404, { ok: false, error: "not_found" }),
+  });
+  assert.equal(rejected.statusCode, 502);
+  assert.equal(rejected.body.error, "primary_review_rejected");
+  assert.equal(rejected.body.primaryReviewStatus, 404);
+  assert.equal(Object.hasOwn(rejected.body, "details"), false);
+});
