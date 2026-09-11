@@ -6,6 +6,8 @@ function responseRecorder() {
   return {
     statusCode: 200,
     body: undefined,
+    headers: {},
+    setHeader(name, value) { this.headers[name] = value; },
     status(code) { this.statusCode = code; return this; },
     json(payload) { this.body = payload; return payload; },
   };
@@ -58,7 +60,8 @@ test("the Preview OIDC proof forwards a short-lived identity and verifies a no-d
   assert.equal(res.statusCode, 200);
   assert.equal(res.body.ok, true);
   assert.equal(res.body.proof.authentication, "vercel_oidc_and_service_pair");
-  assert.deepEqual(res.body.proof.providerCalls, []);
+  assert.equal(res.body.proof.providerCalls.length, 0);
+  assert.equal(res.headers["Cache-Control"], "no-store, max-age=0");
   assert.equal(calls.length, 2);
   assert.equal(calls[1].options.headers["x-vercel-trusted-oidc-idp-token"], "short-lived-test-oidc");
   assert.equal(calls[1].options.headers["x-avf-automation-client"], "preview-client");
