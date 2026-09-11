@@ -23,6 +23,7 @@ function proofEnv(overrides = {}) {
     AUTOMATION_MODE: "dry_run",
     VERCEL_GIT_COMMIT_SHA: "preview-test-commit",
     VERCEL_URL: "preview.example.vercel.app",
+    AVF_PRIMARY_REVIEW_BASE_URL: "https://preview.example.manus.computer",
     AVF_AUTOMATION_CLIENT_ID: "preview-client",
     AVF_AUTOMATION_SIGNING_KEY: "preview-signing-key",
     ...overrides,
@@ -92,6 +93,22 @@ test("the proof gateway fails closed outside Preview and when the kill switch is
   await runPreviewOidcProof({ req: { method: "GET" }, res: killed, env: proofEnv({ AUTOMATION_KILL_SWITCH: "enabled" }) });
   assert.equal(killed.statusCode, 503);
   assert.equal(killed.body.error, "automation_kill_switch_enabled");
+});
+
+test("the proof gateway permits only a managed Preview host for primary review state", async () => {
+  const missing = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: missing, env: proofEnv({ AVF_PRIMARY_REVIEW_BASE_URL: undefined }),
+  });
+  assert.equal(missing.statusCode, 503);
+  assert.equal(missing.body.error, "proof_gateway_not_configured");
+
+  const production = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: production, env: proofEnv({ AVF_PRIMARY_REVIEW_BASE_URL: "https://avfreelance.com" }),
+  });
+  assert.equal(production.statusCode, 503);
+  assert.equal(production.body.error, "proof_gateway_not_configured");
 });
 
 test("the proof gateway accepts Preview's implicit dry-run mode but rejects an explicit non-dry-run mode", async () => {
