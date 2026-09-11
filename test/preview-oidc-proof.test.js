@@ -148,3 +148,13 @@ test("the proof gateway rejects missing OIDC, replay, and unsafe manifests witho
   assert.equal(unsafe.statusCode, 502);
   assert.equal(unsafe.body.error, "fixture_handler_proof_rejected");
 });
+
+test("the proof gateway distinguishes primary authentication rejection from an idempotency replay", async () => {
+  const authentication = responseRecorder();
+  await runPreviewOidcProof({
+    req: { method: "GET" }, res: authentication, env: proofEnv(),
+    fetchImpl: async () => response(401, { ok: false, error: "automation_auth_required" }),
+  });
+  assert.equal(authentication.statusCode, 502);
+  assert.equal(authentication.body.error, "primary_review_auth_rejected");
+});
