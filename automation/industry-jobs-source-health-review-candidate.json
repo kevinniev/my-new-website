@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "status": "inactive_review_only_candidate",
+  "environment": "production_activation_required",
+  "route": "/api/cron/industry-jobs",
+  "schedule": "15 */6 * * *",
+  "timezone": "UTC",
+  "expiry": {
+    "durationDays": 7,
+    "expiresAfterUtc": "must_be_set_at_activation"
+  },
+  "actionCap": {
+    "maximumRuns": 1,
+    "maximumProviderCalls": 0,
+    "maximumListingWrites": 0,
+    "maximumUserWrites": 0,
+    "maximumNotifications": 0,
+    "maximumDispatches": 0,
+    "maxDurationMs": 25000
+  },
+  "noDispatchBoundary": {
+    "providerRequestsAllowed": false,
+    "marketplaceWritesAllowed": false,
+    "userWritesAllowed": false,
+    "notificationDeliveryAllowed": false,
+    "externalDispatchAllowed": false,
+    "financialActionsAllowed": false
+  },
+  "manifest": {
+    "mode": "source_health_review_only",
+    "deterministicFields": [
+      "route",
+      "scheduledWindowUtc",
+      "sourceNames",
+      "sourceFreshnessBand",
+      "lastKnownSuccessfulRefreshAt",
+      "lastKnownFailureClass",
+      "retainedCallbackState",
+      "actionCap",
+      "providerCalls",
+      "sideEffects",
+      "dataMutations",
+      "rollbackState"
+    ],
+    "redactionRules": [
+      "No credential, authorization header, API key, cookie, URL query token, or deployment-protection value.",
+      "No external-job title, employer, application URL, candidate identifier, user identifier, or raw provider payload.",
+      "Source health is aggregate-only: source name, freshness band, run class, timestamp, and bounded count.",
+      "Persist only a redacted manifest and deterministic idempotency/lock metadata in externalAutomationRuns."
+    ]
+  },
+  "concurrency": {
+    "lockScope": "industry-jobs-source-health:<utc-6h-window>",
+    "lockTtlMs": 60000,
+    "idempotencyScope": "industry-jobs-source-health:<utc-6h-window>:v1",
+    "replayBehavior": "return_prior_redacted_manifest_without_new_work"
+  },
+  "noCoexistence": {
+    "activationBlockedUntil": [
+      "Owner approves an exact source-level replacement decision.",
+      "industry-job-sync-adzuna is paused or explicitly retained outside the source scope.",
+      "job-sync is paused or explicitly retained outside the source scope.",
+      "No other Industry Jobs provider schedule is enabled."
+    ],
+    "retainedCallbacks": [
+      "industry-job-sync-adzuna",
+      "job-sync"
+    ]
+  },
+  "rollback": {
+    "externalDisableFirst": true,
+    "automaticRetryAllowed": false,
+    "fallback": "resume only the separately approved retained callback posture",
+    "evidence": "redacted rollback manifest with disabled state and no side effects"
+  }
+}
